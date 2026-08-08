@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Samrat Fast</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2 style="color: #fbbf24;">Samrat Fast ⚡</h2>
+    <input type="text" id="p" placeholder="Phone Number">
+    <input type="password" id="pw" placeholder="Password">
+    <button onclick="login()">Login to Play</button>
+    <p style="font-size: 13px; margin-top: 15px;">Account nahi hai? <a href="signup.html" style="color: #fbbf24;">Register Karein</a></p>
+</div>
+<script>
+    const firebaseConfig = { apiKey: "PASTE_YOUR_NEW_API_KEY", authDomain: "samrat-fast.firebaseapp.com", projectId: "samrat-fast", storageBucket: "samrat-fast.firebasestorage.app", messagingSenderId: "...", appId: "..." };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function login() {
+        const phone = document.getElementById("p").value;
+        const pass = document.getElementById("pw").value;
+        const res = await db.collection("users").where("phone", "==", phone).where("password", "==", pass).get();
+        if(!res.empty) {
+            localStorage.setItem("userId_fast", res.docs[0].id);
+            window.location.href = "index.html";
+        } else { alert("Wrong ID/Pass!"); }
+    }
+</script>
+</body>
+</html>
