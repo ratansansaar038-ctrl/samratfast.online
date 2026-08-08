@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Master Admin - Samrat Fast</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #000; color: white; padding: 20px; }
+        .box { background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333; margin-bottom: 20px; }
+        .btn-ok { background: #22c55e; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #222; padding: 10px; text-align: left; }
+        th { background: #fbbf24; color: #000; }
+    </style>
+</head>
+<body>
+    <h1>Master Control 👑</h1>
+
+    <!-- Manual Recharge Requests -->
+    <div class="box" style="border-color: #10b981;">
+        <h3 style="color: #10b981;">New Recharge Requests (₹10-₹199)</h3>
+        <div id="req-list">No requests</div>
+    </div>
+
+    <!-- Live Load Management -->
+    <div class="box">
+        <h3>Live Bets (Next Round)</h3>
+        <table id="load-table">
+            <thead><tr><th>Number</th><th>Total Amount</th></tr></thead>
+            <tbody id="load-body"></tbody>
+        </table>
+    </div>
+
+<script>
+    // --- NAYE PROJECT KI CONFIG ---
+    const firebaseConfig = { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 1. Recharge Requests Approve karna
+    db.collection("requests").where("status", "==", "pending").onSnapshot(snap => {
+        let html = "";
+        snap.forEach(doc => {
+            const r = doc.data();
+            html += `<div style="background:#222; padding:10px; margin-bottom:5px; display:flex; justify-content:space-between;">
+                <span>${r.name}: <b>₹${r.amount}</b> (UTR: ${r.utr})</span>
+                <button class="btn-ok" onclick="approve('${doc.id}', '${r.userId}', ${r.amount})">APPROVE ✅</button>
+            </div>`;
+        });
+        document.getElementById("req-list").innerHTML = html || "No pending requests";
+    });
+
+    async function approve(docId, uId, amt) {
+        await db.collection("users").doc(uId).update({ wallet: firebase.firestore.FieldValue.increment(amt) });
+        await db.collection("requests").doc(docId).update({ status: "approved" });
+        alert("Wallet Updated!");
+    }
+
+    // 2. Live Load (Dekho kis number par kitna paisa laga hai)
+    db.collection("fast_bets").where("status", "==", "pending").onSnapshot(snap => {
+        let load = {};
+        snap.forEach(doc => {
+            let b = doc.data();
+            load[b.number] = (load[b.number] || 0) + b.amount;
+        });
+        let html = "";
+        for(let i=0; i<=9; i++) {
+            html += <tr><td><b>${i}</b></td><td>₹${load[i] || 0}</td></tr>;
+        }
+        document.getElementById("load-body").innerHTML = html;
+    });
+</script>
+</body>
+</html>
