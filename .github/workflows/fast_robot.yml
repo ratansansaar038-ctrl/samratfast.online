@@ -1,0 +1,25 @@
+name: Samrat Fast Robot
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Har 5 minute mein khud chalega
+  workflow_dispatch: # Manual button
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install firebase-admin node-fetch@2
+
+      - name: Run Engine
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: node settle.js
