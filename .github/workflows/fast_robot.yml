@@ -1,8 +1,8 @@
 name: Samrat Fast Robot
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *' # Har 5 minute mein khud chalega
-  workflow_dispatch: # Manual button
+    - cron: '*/5 * * * *'
 
 jobs:
   run-engine:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install firebase-admin node-fetch@2
 
       - name: Run Engine
