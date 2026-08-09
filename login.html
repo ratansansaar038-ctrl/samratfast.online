@@ -2,37 +2,38 @@
 <html>
 <head>
     <title>Login - Samrat Fast</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        body { background: #f0f2f5; font-family: Arial; text-align: center; padding-top: 50px; }
+        .box { background: white; padding: 30px; border-radius: 15px; display: inline-block; width: 90%; max-width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-log { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-<div class="card">
-    <h2 style="color: #fbbf24;">Samrat Fast ⚡</h2>
-    <input type="text" id="p" placeholder="Phone Number">
-    <input type="password" id="pw" placeholder="Password">
-    <button onclick="login()">Login to Play</button>
-    <p style="font-size: 13px; margin-top: 15px;">Account nahi hai? <a href="signup.html" style="color: #fbbf24;">Register Karein</a></p>
+<div class="box">
+    <h2 style="color:#3b82f6;">User Login</h2>
+    <input type="text" id="ph" placeholder="Phone Number">
+    <input type="password" id="ps" placeholder="Password">
+    <button class="btn-log" onclick="login()">LOGIN NOW</button>
+    <p style="font-size: 13px; margin-top: 15px;">Naya account? <a href="signup.html">Yahan Register Karein</a></p>
 </div>
 <script>
-    const firebaseConfig = { apiKey: "PASTE_YOUR_NEW_API_KEY", authDomain: "samrat-fast.firebaseapp.com", projectId: "samrat-fast", storageBucket: "samrat-fast.firebasestorage.app", messagingSenderId: "...", appId: "..." };
+    const firebaseConfig = { apiKey: "AIzaSyD_Da_doRKedyGEVjZemzP9Gq6VIPfokhw", authDomain: "number-samrat.firebaseapp.com", projectId: "number-samrat", storageBucket: "number-samrat.firebasestorage.app", messagingSenderId: "154722781783", appId: "1:154722781783:web:7b6136cec1c34a11b3f112" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     async function login() {
-        const phone = document.getElementById("p").value;
-        const pass = document.getElementById("pw").value;
-        const res = await db.collection("users").where("phone", "==", phone).where("password", "==", pass).get();
+        const p = document.getElementById("ph").value.trim();
+        const s = document.getElementById("ps").value.trim();
+        const res = await db.collection("users").where("phone", "==", p).where("password", "==", s).get();
         if(!res.empty) {
             localStorage.setItem("userId_fast", res.docs[0].id);
+            // LOGIN HOTE HI GAME.HTML PAR BHEJEGA
             window.location.href = "game.html";
-        } else { alert("Wrong ID/Pass!"); }
+        } else { alert("Wrong Details!"); }
     }
 </script>
 </body>
