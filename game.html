@@ -87,7 +87,7 @@
         // 1. Grid Generate
         const grid = document.getElementById('grid-btns');
         for(let i=0; i<=9; i++) {
-            grid.innerHTML += <button class="num-btn" onclick="selectN(${i}, this)">${i}</button>;
+            grid.innerHTML +=' <button class="num-btn" onclick="selectN(${i}, this)">${i}</button>';
         }
 
         function selectN(n, btn) {
