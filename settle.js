@@ -1,11 +1,11 @@
 const admin = require("firebase-admin");
 
 async function run() {
-  console.log("Starting Samrat Fast Engine...");
+  console.log("--- SAMRAT FAST ENGINE STARTING ---");
 
   const key = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!key) {
-    console.error("Error: Key not found in Secrets!");
+    console.error("Error: Key not found!");
     return;
   }
 
@@ -16,21 +16,21 @@ async function run() {
     }
     const db = admin.firestore();
 
-    // 1. Result Nikalna (0-9)
+    // 1. Random Result (0-9)
     const luckyNum = Math.floor(Math.random() * 10).toString();
     console.log("Winning Number: " + luckyNum);
 
-    // 2. Result Save Karna
-    await db.collection("results").add({
+    // 2. Result Save (In 'results_fast' folder)
+    await db.collection("results_fast").add({
       number: luckyNum,
       timestamp: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    // 3. Bets Check Karna
+    // 3. Fast Bets Check
     const bets = await db.collection("fast_bets").where("status", "==", "pending").get();
 
     if (bets.empty) {
-      console.log("No pending bets found.");
+      console.log("No pending fast bets.");
       return;
     }
 
@@ -51,7 +51,7 @@ async function run() {
     });
 
     await batch.commit();
-    console.log("ALL ROUNDS SETTLED! ✅");
+    console.log("ALL FAST ROUNDS SETTLED! ✅");
 
   } catch (err) {
     console.error("Asli Galti: " + err.message);
