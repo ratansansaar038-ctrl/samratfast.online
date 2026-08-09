@@ -9,9 +9,13 @@
 <body style="font-family: Arial; background: #0f172a; color: white; text-align: center; padding-top: 50px;">
 <div style="background: #1e293b; padding: 30px; border-radius: 20px; border: 2px solid #3b82f6; width: 90%; max-width: 320px; display: inline-block;">
     <h2 style="color:#3b82f6;">👤 User Login</h2>
-    <input type="text" id="ph" placeholder="Phone Number" style="width:100%; padding:12px; margin:8px 0; border-radius:8px; border:none;">
-    <input type="password" id="ps" placeholder="Password" style="width:100%; padding:12px; margin:8px 0; border-radius:8px; border:none;">
+    <p id="debug-status" style="font-size: 11px; color: #94a3b8;">Samrat Fast Engine Ready</p>
+    
+    <input type="text" id="ph" placeholder="Mobile Number" style="width:100%; padding:12px; margin:8px 0; border-radius:8px; border:none; background:#0f172a; color:white;">
+    <input type="password" id="ps" placeholder="Password" style="width:100%; padding:12px; margin:8px 0; border-radius:8px; border:none; background:#0f172a; color:white;">
+    
     <button onclick="login()" style="width:100%; padding:12px; background:#3b82f6; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">LOGIN TO PLAY</button>
+    
     <p style="font-size: 13px; margin-top: 15px;">Naya account? <a href="signup.html" style="color:#10b981;">Signup Karein</a></p>
 </div>
 
@@ -23,12 +27,30 @@
     async function login() {
         const p = document.getElementById("ph").value.trim();
         const s = document.getElementById("ps").value.trim();
-        // NAYA FOLDER: users_fast
-        const res = await db.collection("users_fast").where("phone", "==", p).where("password", "==", s).get();
-        if(!res.empty) {
-            localStorage.setItem("userId_fast", res.docs[0].id);
-            window.location.href = "index.html";
-        } else { alert("User nahi mila! Signup karein."); }
+        const status = document.getElementById("debug-status");
+
+        if(!p || !s) return alert("Pehle details dalo!");
+        status.innerText = "Checking users_fast collection...";
+
+        try {
+            // Hum sirf users_fast mein dhoond rahe hain
+            const res = await db.collection("users_fast").where("phone", "==", p).where("password", "==", s).get();
+            
+            if(!res.empty) {
+                status.innerText = "Success! Redirecting...";
+                const docId = res.docs[0].id;
+                // Important: Id yahan save hogi
+                localStorage.setItem("userId_fast", docId);
+                localStorage.setItem("role", "user");
+                window.location.href = "index.html";
+            } else {
+                status.innerText = "Login Failed: Wrong ID/Pass";
+                alert("Details galat hain! Firebase mein users_fast folder check karo.");
+            }
+        } catch (e) {
+            status.innerText = "Error: " + e.message;
+            alert("Error: " + e.message);
+        }
     }
 </script>
 </body>
