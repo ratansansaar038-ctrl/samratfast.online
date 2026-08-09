@@ -1,61 +1,74 @@
 const admin = require("firebase-admin");
+const fetch = require("node-fetch");
 
-async function run() {
+async function runEngine() {
   console.log("--- SAMRAT FAST ENGINE STARTING ---");
 
-  const key = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!key) {
-    console.error("Error: Key not found!");
+  const keyData = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!keyData) {
+    console.error("ERROR: FIREBASE_SERVICE_ACCOUNT chabi nahi mili.");
     return;
   }
 
   try {
-    const serviceAccount = JSON.parse(key);
-    if (!admin.apps.length) {
-      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-    }
+    const serviceAccount = JSON.parse(keyData);
+
+    // Firebase Initialize (Bina kisi crash wali line ke)
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+    
     const db = admin.firestore();
+    console.log("Firebase Connected ✅");
 
-    // 1. Random Result (0-9)
-    const luckyNum = Math.floor(Math.random() * 10).toString();
-    console.log("Winning Number: " + luckyNum);
+    // 1. Result Fetch (Bina /get-result ke)
+    const response = await fetch("https://numbersamra-app-2.ai.studio");
+    const data = await response.json();
 
-    // 2. Result Save (In 'results_fast' folder)
-    await db.collection("results_fast").add({
-      number: luckyNum,
-      timestamp: admin.firestore.FieldValue.serverTimestamp()
-    });
+    if (data && data.number) {
+      const winNo = String(data.number);
+      const market = data.game;
+      console.log("Result Found: " + winNo + " for " + market);
 
-    // 3. Fast Bets Check
-    const bets = await db.collection("fast_bets").where("status", "==", "pending").get();
+      // 2. Bets settle karna
+      const snapshot = await db.collection("fast_bets")
+        .where("gameName", "==", market)
+        .where("status", "==", "pending")
+        .get();
 
-    if (bets.empty) {
-      console.log("No pending fast bets.");
-      return;
-    }
-
-    const batch = db.batch();
-    bets.forEach((doc) => {
-      const b = doc.data();
-      const uRef = db.collection("users").doc(b.userId);
-      const amt = parseInt(b.amount);
-
-      if (b.number.toString() === luckyNum) {
-        // WINNER (10 ka 90)
-        batch.update(uRef, { wallet: admin.firestore.FieldValue.increment(amt * 9) });
-        batch.update(doc.ref, { status: "win", result: luckyNum });
-      } else {
-        // LOSER
-        batch.update(doc.ref, { status: "loss", result: luckyNum });
+      if (snapshot.empty) {
+        console.log("Koi pending bet nahi mili.");
+        return;
       }
-    });
 
-    await batch.commit();
-    console.log("ALL FAST ROUNDS SETTLED! ✅");
+      const batch = db.batch();
+      console.log("Found " + snapshot.size + " bets. Settling...");
 
+      snapshot.forEach(doc => {
+        const bet = doc.data();
+        const userRef = db.collection("users").doc(bet.userId);
+        const sRef = db.collection("khaiwal").doc("stats");
+        const amt = parseInt(bet.amount);
+
+        if (String(bet.number) === winNo) {
+          // Winner: 9 guna
+          batch.update(userRef, { wallet: admin.firestore.FieldValue.increment(amt * 9) });
+          batch.update(sRef, { totalBalance: admin.firestore.FieldValue.increment(-(amt * 9)) });
+          batch.update(doc.ref, { status: "win" });
+        } else {
+          // Loser
+          batch.update(sRef, { totalBalance: admin.firestore.FieldValue.increment(amt) });
+          batch.update(doc.ref, { status: "loss" });
+        }
+      });
+
+      await batch.commit();
+      console.log("SETTLEMENT SUCCESSFUL! 🏆");
+    }
   } catch (err) {
-    console.error("Asli Galti: " + err.message);
+    console.error("CRITICAL ERROR: " + err.message);
+    process.exit(1);
   }
 }
 
-run();
+runEngine();
