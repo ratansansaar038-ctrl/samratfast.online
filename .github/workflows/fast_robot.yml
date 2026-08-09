@@ -8,18 +8,12 @@ jobs:
   run-engine:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: '16'
-
-      # --- YE RAHI WO LINE (Line 14-15 ke paas) ---
-      - name: Install dependencies
-        run: npm install firebase-admin@latest node-fetch@2
-
+      - name: Install fixed dependencies
+        run: npm install firebase-admin@11.0.0 node-fetch@2
       - name: Run Engine
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
