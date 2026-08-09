@@ -3,31 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samrat Fast - 1 Minute Game</title>
+    <title>Samrat Fast - Direct Instant Play</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0f1e; color: white; margin: 0; text-align: center; }
-        .hero { padding: 80px 20px; background: linear-gradient(180deg, #1e293b 0%, #0a0f1e 100%); border-bottom: 2px solid #fbbf24; }
-        h1 { color: #fbbf24; font-size: 2.8rem; margin-bottom: 10px; }
-        .btn-group { display: flex; flex-direction: column; gap: 18px; align-items: center; margin-top: 40px; }
-        .btn { width: 85%; max-width: 320px; padding: 18px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 1.2rem; transition: 0.3s; display: block; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
-        .btn-play { background: #fbbf24; color: black; animation: pulse 2s infinite; }
-        .btn-login { background: #3b82f6; color: white; }
-        .btn-reg { background: #10b981; color: white; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; text-align: center; }
+        .hero { padding: 80px 20px; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-bottom: 2px solid #fbbf24; }
+        h1 { color: #fbbf24; font-size: 2.8rem; margin: 0; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+        .btn-group { display: flex; flex-direction: column; gap: 20px; align-items: center; margin: 40px 0; }
+        .btn { width: 85%; max-width: 320px; padding: 18px; border-radius: 12px; font-weight: bold; text-decoration: none; font-size: 1.2rem; display: block; transition: 0.3s; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
+        .btn-apk { background: #fbbf24; color: black; font-size: 1.4rem; animation: pulse 2s infinite; }
+        .btn-user { background: #3b82f6; } 
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        .trust-box { background: #1e293b; margin: 20px auto; width: 85%; padding: 20px; border-radius: 15px; border: 1px solid #334155; text-align: left; }
+        .trust-box h3 { color: #fbbf24; margin-top: 0; font-size: 1rem; }
+        .trust-box p { font-size: 0.85rem; color: #94a3b8; line-height: 1.5; margin: 5px 0; }
     </style>
 </head>
 <body>
+
     <div class="hero">
         <h1>Samrat Fast ⚡</h1>
-        <p style="color: #94a3b8; font-size: 1.1rem;">India ka Sabse Tez 1-Minute Game</p>
+        <p style="color: #94a3b8; margin-top: 10px;">No Agent. No Wait. Direct Payout. 💰</p>
+        
         <div class="btn-group">
-            <a href="login.html" class="btn btn-play">🎮 PLAY ONLINE NOW</a>
-            <a href="signup.html" class="btn btn-reg">📝 CREATE ACCOUNT</a>
-            <a href="login.html" class="btn btn-login">👤 LOGIN</a>
+            <!-- ASLI MAQSAD: APK DOWNLOAD -->
+            <a href="numbersamrat.apk" class="btn btn-apk">⬇️ DOWNLOAD OFFICIAL APK</a>
+
+            <p style="color: #475569; margin: 5px 0; font-weight: bold;">-- OR --</p>
+
+            <!-- DIRECT USER LOGIN -->
+            <a href="login.html" class="btn btn-user">👤 PLAY ONLINE NOW</a>
         </div>
     </div>
-    <div style="padding: 40px; color: #475569; font-size: 14px;">
-        © 2024 Samrat Fast Online. Professional Auto-Settle Gaming.
+
+    <div class="trust-box">
+        <h3>Kyu khele Samrat Fast?</h3>
+        <p>✅ *Direct Connection:* Koi khaiwal nahi, seedha admin se judiye.</p>
+        <p>✅ *Instant Result:* Har 1 minute mein naya number aur faisla.</p>
+        <p>✅ *Auto-Settle:* Result aate hi paisa aapke wallet mein.</p>
+        <p>✅ *Small Recharge:* ₹10 se khelna shuru karein.</p>
     </div>
+
+    <div style="padding: 20px; color: #475569; font-size: 11px;">
+        © 2024 Samrat Fast Online. All India Direct Service.
+    </div>
+
 </body>
 </html>
