@@ -13,26 +13,31 @@ async function run() {
     try {
         const serviceAccount = JSON.parse(keyString);
 
-        // Naya Initialization Style (Taaki 'cert' error na aaye)
-        if (!admin.apps.length) {
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount)
-            });
-        }
+        // --- FIXED: length wali line hata di hai ---
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+        });
 
         const db = admin.firestore();
         console.log("Firebase Connected ✅");
 
-        // Result Fetch karna
+        // Result Fetch (ai.studio se)
         const res = await fetch("https://numbersamra-app-2.ai.studio");
         const data = await res.json();
 
         if (data && data.number) {
             const winNo = String(data.number);
             const market = data.game;
-            console.log("Result Found: " + winNo + " (" + market + ")");
+            console.log("Result Found: " + winNo + " for " + market);
 
-            // Bets check karna
+            // Results_fast folder mein save karna
+            await db.collection("results_fast").add({
+                number: winNo,
+                game: market,
+                timestamp: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Bets settle karna
             const snap = await db.collection("fast_bets").where("status", "==", "pending").get();
             if (snap.empty) {
                 console.log("No pending bets.");
@@ -41,19 +46,14 @@ async function run() {
 
             const batch = db.batch();
             snap.forEach(doc => {
-                const bet = doc.data();
-                const userRef = db.collection("users").doc(bet.userId);
-                const statsRef = db.collection("khaiwal").doc("stats");
-                const amt = parseInt(bet.amount);
+                const b = doc.data();
+                const uRef = db.collection("users").doc(b.userId);
+                const amt = parseInt(b.amount);
 
-                if (String(bet.number) === winNo) {
-                    // Winner Update
-                    batch.update(userRef, { wallet: admin.firestore.FieldValue.increment(amt * 9) });
-                    batch.update(statsRef, { totalBalance: admin.firestore.FieldValue.increment(-(amt * 9)) });
+                if (String(b.number) === winNo) {
+                    batch.update(uRef, { wallet: admin.firestore.FieldValue.increment(amt * 9) });
                     batch.update(doc.ref, { status: "win", result: winNo });
                 } else {
-                    // Loser Update
-                    batch.update(statsRef, { totalBalance: admin.firestore.FieldValue.increment(amt) });
                     batch.update(doc.ref, { status: "loss", result: winNo });
                 }
             });
