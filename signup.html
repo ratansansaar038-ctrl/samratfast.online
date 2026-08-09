@@ -1,91 +1,33 @@
-[19:30, 08/08/2026] +91 7428 919 416: <!DOCTYPE html>
-<html>
-<head>
-    <title>Login - Samrat Fast</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-s…
-[19:30, 08/08/2026] +91 7428 919 416: Login.html
-[19:53, 08/08/2026] +91 7428 919 416: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Samrat Fast ⚡</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <title>Samrat Fast - 1 Minute Game</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0f1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); border: 1px solid #334155; }
-        h2 { color: #fbbf24; margin-bottom: 5px; }
-        p { color: #94a3b8; font-size: 13px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0a0f1e; color: white; box-sizing: border-box; font-size: 1rem; }
-        .btn-reg { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-        .login-link { margin-top: 20px; font-size: 14px; color: #94a3b8; }
-        .login-link a { color: #fbbf24; text-decoration: none; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0f1e; color: white; margin: 0; text-align: center; }
+        .hero { padding: 80px 20px; background: linear-gradient(180deg, #1e293b 0%, #0a0f1e 100%); border-bottom: 2px solid #fbbf24; }
+        h1 { color: #fbbf24; font-size: 2.8rem; margin-bottom: 10px; }
+        .btn-group { display: flex; flex-direction: column; gap: 18px; align-items: center; margin-top: 40px; }
+        .btn { width: 85%; max-width: 320px; padding: 18px; border-radius: 15px; font-weight: bold; text-decoration: none; font-size: 1.2rem; transition: 0.3s; display: block; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
+        .btn-play { background: #fbbf24; color: black; animation: pulse 2s infinite; }
+        .btn-login { background: #3b82f6; color: white; }
+        .btn-reg { background: #10b981; color: white; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
-
-<div class="card">
-    <h2>Samrat Fast ⚡</h2>
-    <p>Naya Account Banayein aur Khelna Shuru Karein</p>
-    
-    <input type="text" id="name" placeholder="Apna Poora Naam">
-    <input type="text" id="phone" placeholder="Mobile Number (Login ID)">
-    <input type="password" id="pass" placeholder="Password Set Karein">
-    
-    <!-- Isme Agent Code ki zaroorat nahi hai kyunki ye Direct Game hai -->
-    
-    <button class="btn-reg" onclick="register()">CREATE ACCOUNT & PLAY</button>
-    
-    <div class="login-link">
-        Pehle se account hai? <a href="game.html">Login Karein</a>
+    <div class="hero">
+        <h1>Samrat Fast ⚡</h1>
+        <p style="color: #94a3b8; font-size: 1.1rem;">India ka Sabse Tez 1-Minute Game</p>
+        <div class="btn-group">
+            <a href="login.html" class="btn btn-play">🎮 PLAY ONLINE NOW</a>
+            <a href="signup.html" class="btn btn-reg">📝 CREATE ACCOUNT</a>
+            <a href="login.html" class="btn btn-login">👤 LOGIN</a>
+        </div>
     </div>
-</div>
-
-<script>
-    // --- NAYE PROJECT (Samrat Fast) KI CONFIG YAHAN DALO ---
-    const firebaseConfig = {
-        apiKey: "PASTE_YOUR_NEW_API_KEY",
-        authDomain: "samrat-fast.firebaseapp.com",
-        projectId: "samrat-fast",
-        storageBucket: "samrat-fast.firebasestorage.app",
-        messagingSenderId: "...",
-        appId: "..."
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    async function register() {
-        const n = document.getElementById("name").value.trim();
-        const p = document.getElementById("phone").value.trim();
-        const pw = document.getElementById("pass").value.trim();
-
-        if(!n || !p || !pw) return alert("Bhai saari details bharo!");
-
-        // Check karo ki number pehle se toh nahi hai
-        const check = await db.collection("users").where("phone", "==", p).get();
-        if(!check.empty) return alert("Bhai ye number pehle se register hai!");
-
-        // Firebase mein naya user dalo
-        await db.collection("users").add({
-            name: n,
-            phone: p,
-            password: pw,
-            wallet: 0, // Naya user = 0 balance
-            status: "active",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert("Mubarak ho! Account ban gaya. Ab login karke paise add karein.");
-        window.location.href = "login.html";
-    }
-</script>
+    <div style="padding: 40px; color: #475569; font-size: 14px;">
+        © 2024 Samrat Fast Online. Professional Auto-Settle Gaming.
+    </div>
 </body>
 </html>
