@@ -10,70 +10,82 @@
         :root { --gold: #fbbf24; --blue: #3b82f6; --dark: #0f172a; --card: #1e293b; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; }
         .header { background: #1e293b; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 130px; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .container { padding: 10px; max-width: 500px; margin: 0 auto; padding-bottom: 120px; }
         
         /* WALLET & TIMER */
-        .wallet-card { background: white; color: black; padding: 15px; border-radius: 20px; text-align: center; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .wallet-card { background: white; color: black; padding: 15px; border-radius: 15px; text-align: center; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .bal-amt { font-size: 2rem; font-weight: 800; color: #059669; }
-        .timer-box { font-size: 1.2rem; color: #94a3b8; margin: 15px 0; }
-        .win-circle { width: 80px; height: 80px; background: #000; border: 3px solid var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: var(--gold); box-shadow: 0 0 15px var(--gold); }
+        .timer-box { font-size: 1.1rem; color: #94a3b8; margin: 15px 0; }
+        .win-circle { width: 75px; height: 75px; background: #000; border: 3px solid var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: bold; color: var(--gold); box-shadow: 0 0 15px var(--gold); }
 
-        /* GRID & BUTTONS */
+        /* NUMBER GRID */
         .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px; }
         .num-btn { background: #334155; border: 1px solid #475569; color: white; padding: 12px 0; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
         .num-btn.active { background: var(--gold); color: black; box-shadow: 0 0 10px var(--gold); }
 
-        /* BET HISTORY SECTION (Visible Now) */
-        .history-section { background: var(--card); margin-top: 20px; padding: 15px; border-radius: 15px; text-align: left; border: 1px solid #334155; }
-        .history-section h4 { margin: 0 0 10px 0; color: var(--gold); border-bottom: 1px solid #334155; padding-bottom: 5px; }
-        .h-card { background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; font-size: 13px; border-left: 4px solid #475569; }
-        .win-bg { border-left-color: #10b981; color: #10b981; }
-        .loss-bg { border-left-color: #ef4444; color: #ef4444; }
+        /* MY HISTORY SECTION (Visible and Styled) */
+        .history-section { background: var(--card); margin: 20px 10px; padding: 15px; border-radius: 15px; text-align: left; border: 1px solid #334155; }
+        .history-header { color: var(--gold); font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px; font-size: 14px; }
+        .h-card { background: #0f172a; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; border-left: 5px solid #475569; }
+        .status-win { border-left-color: #10b981; color: #10b981; }
+        .status-loss { border-left-color: #ef4444; color: #ef4444; }
 
-        /* FOOTER BET BOX */
-        .bet-footer { background: #1e293b; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; display: flex; justify-content: center; z-index: 1000; }
+        /* BET FOOTER */
+        .bet-footer { background: #1e293b; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; display: flex; justify-content: center; z-index: 100; }
         .btn-bet { background: var(--blue); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="text-align: left;"><small style="color:var(--gold);">Samrat Fast 5-Min</small><br><b id="uNameDisplay">User</b></div>
+        <div style="text-align: left;"><b id="uNameDisplay">User</b></div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
     <div class="container">
         <div class="wallet-card">
-            <small>Balance</small>
+            <small>Available Balance</small>
             <div class="bal-amt">₹<span id="balDisplay">0</span></div>
         </div>
 
         <div class="timer-box">
-            Next Result: <span id="timer-display" style="color:white; font-weight:bold;">05:00</span>
+            Next Result in: <span id="timer-display" style="color:white; font-weight:bold;">05:00</span>
             <div class="win-circle" id="result-box">?</div>
             <small>LATEST RESULT</small>
         </div>
 
-        <div class="num-grid" id="grid-container"></div>
+        <div class="num-grid" id="grid-container">
+            <!-- Line 87 is replaced by simple buttons below -->
+            <button class="num-btn" onclick="selectN(0, this)">0</button>
+            <button class="num-btn" onclick="selectN(1, this)">1</button>
+            <button class="num-btn" onclick="selectN(2, this)">2</button>
+            <button class="num-btn" onclick="selectN(3, this)">3</button>
+            <button class="num-btn" onclick="selectN(4, this)">4</button>
+            <button class="num-btn" onclick="selectN(5, this)">5</button>
+            <button class="num-btn" onclick="selectN(6, this)">6</button>
+            <button class="num-btn" onclick="selectN(7, this)">7</button>
+            <button class="num-btn" onclick="selectN(8, this)">8</button>
+            <button class="num-btn" onclick="selectN(9, this)">9</button>
+        </div>
 
-        <!-- MY HISTORY SECTION -->
         <div class="history-section">
-            <h4>📊 My Recent Bets</h4>
+            <div class="history-header">📋 MY RECENT BETS (Win/Loss)</div>
             <div id="bet-history-list">
-                <p style="color:#475569; font-size:12px;">Loading history...</p>
+                <p style="color:#475569; font-size:12px;">No bets found yet...</p>
             </div>
         </div>
     </div>
 
     <div class="bet-footer">
         <input type="number" id="bet-amt-input" placeholder="Amount ₹" style="width:50%; padding:12px; border-radius:8px; border:none; margin-right:10px; font-size:1rem; color: black;">
-        <button class="btn-bet" onclick="handlePlaceBet()">CONFIRM BET</button>
+        <button class="btn-bet" onclick="placeFastBet()">CONFIRM BET</button>
     </div>
 
     <script>
+        // FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyD_Da_doRKedyGEVjZemzP9Gq6VIPfokhw", authDomain: "number-samrat.firebaseapp.com", projectId: "number-samrat", storageBucket: "number-samrat.firebasestorage.app", messagingSenderId: "154722781783", appId: "1:154722781783:web:7b6136cec1c34a11b3f112" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
         const userId = localStorage.getItem("userId_fast");
@@ -81,18 +93,13 @@
 
         let selectedNumber = null;
 
-        // 1. Grid Generate
-        const grid = document.getElementById('grid-container');
-        for (let i = 0; i <= 9; i++) {
-            grid.innerHTML +=' <button class="num-btn" onclick="highlightNum(${i}, this)">${i}</button>;'
-        }
-        function highlightNum(n, btn) {
+        function selectN(n, btn) {
             selectedNumber = n;
             document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        // 2. Real-time User Data & History
+        // 1. User Data (Balance)
         db.collection("users_fast").doc(userId).onSnapshot(doc => {
             if (doc.exists) {
                 document.getElementById("balDisplay").innerText = doc.data().wallet;
@@ -100,50 +107,47 @@
             }
         });
 
-        // Bet History Logic
-        db.collection("fast_bets").where("userId", "==", userId).orderBy("timestamp", "desc").limit(5).onSnapshot(snap => {
-            let html = "";
-            snap.forEach(doc => {
-                const b = doc.data();
-                const statusClass = b.status === "win" ? "win-bg" : b.status === "loss" ? "loss-bg" : "";
-                html += `<div class="h-card ${statusClass}">
-                    <span>No: ${b.number} | ₹${b.amount}</span>
-                    <b style="text-transform:uppercase;">${b.status}</b>
-                </div>`;
-            });
-            document.getElementById("bet-history-list").innerHTML = html || "<p>No bets yet.</p>";
-        });
-
-        // 3. Result Update
+        // 2. Result Sync
         db.collection("results_fast").orderBy("timestamp", "desc").limit(1).onSnapshot(snap => {
             if (!snap.empty) document.getElementById("result-box").innerText = snap.docs[0].data().number;
         });
 
-        // 4. 5-Minute Timer Logic
+        // 3. History Sync (The missing part)
+        db.collection("fast_bets").where("userId", "==", userId).orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
+            let html = "";
+            snap.forEach(doc => {
+                const b = doc.data();
+                const statusClass = b.status === "win" ? "status-win" : b.status === "loss" ? "status-loss" : "";
+                html += '<div class="h-card ' + statusClass + '">' +
+                        '<span>No: ' + b.number + ' | ₹' + b.amount + '</span>' +
+                        '<b style="text-transform:uppercase;">' + b.status + '</b>' +
+                        '</div>';
+            });
+            if(html) document.getElementById("bet-history-list").innerHTML = html;
+        });
+
+        // 4. Timer (5-Min Fix)
         setInterval(() => {
             const now = new Date();
             const minutes = now.getMinutes();
             const seconds = now.getSeconds();
-            
-            // Calculate time left in 5-minute cycle
-            const minutesLeft = 4 - (minutes % 5);
-            const secondsLeft = 59 - seconds;
-            
-            document.getElementById("timer-display").innerText = 
-                (minutesLeft < 10 ? "0" : "") + minutesLeft + ":" + (secondsLeft < 10 ? "0" : "") + secondsLeft;
+            const mLeft = 4 - (minutes % 5);
+            const sLeft = 59 - seconds;
+            document.getElementById("timer-display").innerText = (mLeft < 10 ? "0" : "") + mLeft + ":" + (sLeft < 10 ? "0" : "") + sLeft;
         }, 1000);
 
         // 5. Place Bet
-        async function handlePlaceBet() {
+        async function placeFastBet() {
             const amt = parseInt(document.getElementById("bet-amt-input").value);
             if (selectedNumber === null || isNaN(amt) || amt < 10) return alert("Select Number & Amount!");
+            
             const userRef = db.collection("users_fast").doc(userId);
             const uDoc = await userRef.get();
             if (uDoc.data().wallet < amt) return alert("Balance Low!");
 
             await userRef.update({ wallet: firebase.firestore.FieldValue.increment(-amt) });
             await db.collection("fast_bets").add({
-                userId, number: selectedNumber, amount: amt, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                userId: userId, number: selectedNumber, amount: amt, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             alert("Bet Placed!");
             document.getElementById("bet-amt-input").value = "";
