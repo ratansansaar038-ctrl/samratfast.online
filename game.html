@@ -10,61 +10,77 @@
     <style>
         :root { --gold: #fbbf24; --blue: #3b82f6; --dark: #0f172a; --card: #1e293b; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; }
+        
+        /* Navbar */
         .header { background: #1e293b; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .wallet-card { background: white; color: #1e293b; padding: 20px; border-radius: 20px; text-align: center; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+        /* Wallet Card */
+        .wallet-card { background: white; color: #1e293b; width: 90%; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); box-sizing: border-box; }
         .bal-amt { font-size: 2.5rem; font-weight: 800; color: #059669; }
-        .btn-auto-recharge { display: block; background: var(--gold); color: black; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 10px; }
-        .manual-recharge { background: var(--card); margin: 15px auto; padding: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; }
+        .btn-auto-recharge { display: block; background: var(--gold); color: black; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 10px; font-size: 1rem; }
+
+        /* Chota Recharge Section */
+        .manual-recharge { background: var(--card); margin: 15px auto; width: 90%; max-width: 400px; padding: 15px; border-radius: 15px; border: 1px dashed var(--gold); text-align: left; box-sizing: border-box; }
         .manual-recharge input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin-top: 5px; font-size: 14px; }
+
+        /* Result Area */
         .win-box { width: 100px; height: 100px; background: #000; border: 4px solid var(--gold); border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: bold; color: var(--gold); box-shadow: 0 0 20px var(--gold); }
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 15px; }
-        .num-btn { background: #334155; border: 1px solid #475569; color: white; padding: 15px 0; border-radius: 12px; font-size: 1.3rem; font-weight: bold; cursor: pointer; }
-        .num-btn.active { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); }
-        .bet-footer { background: var(--card); padding: 20px; border-top: 2px solid var(--gold); position: sticky; bottom: 0; width: 100%; box-sizing: border-box; }
+        .timer-text { color: #94a3b8; font-size: 14px; }
+
+        /* Number Grid */
+        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 15px; max-width: 450px; margin: 0 auto; }
+        .num-btn { background: #334155; border: 1px solid #475569; color: white; padding: 15px 0; border-radius: 12px; font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .num-btn.active { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); transform: scale(1.05); }
+
+        /* Fixed Bet Action Bar */
+        .bet-footer { background: var(--card); padding: 20px; border-top: 2px solid var(--gold); position: sticky; bottom: 0; width: 100%; box-sizing: border-box; z-index: 100; }
         .btn-bet { background: var(--blue); color: white; border: none; padding: 15px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="text-align: left;"><b id="uName">Loading...</b></div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div style="text-align: left;"><small style="color:var(--gold);">Samrat Fast</small><br><b id="uName">Loading...</b></div>
+        <button class="logout-btn" onclick="logout()">LOGOUT</button>
     </div>
 
     <div class="container">
         <div class="wallet-card">
-            <small>Available Balance</small>
+            <small>Wallet Balance</small>
             <div class="bal-amt">₹<span id="bal">0</span></div>
-            <a href="#" id="zypora-link" class="btn-auto-recharge" target="_blank">➕ Automatic Recharge (₹200+)</a>
+            <a href="#" id="zypora-link" class="btn-auto-recharge" target="_blank">➕ RECHARGE (₹200+)</a>
         </div>
 
         <div class="manual-recharge">
-            <small style="color:var(--gold);">CHOTA RECHARGE (₹10 - ₹199)</small><br>
+            <small style="color:var(--gold);">UPI RECHARGE (₹10 - ₹199)</small><br>
             <small>UPI ID: <b>gaurav@upi</b></small>
             <div style="display: flex; gap: 5px; margin-top: 5px;">
-                <input type="number" id="m-amt" placeholder="₹" style="width:70px;">
-                <input type="text" id="m-utr" placeholder="UTR/Ref No." style="flex:1;">
+                <input type="number" id="m-amt" placeholder="Amount" style="width:70px;">
+                <input type="text" id="m-utr" placeholder="UTR/UTR Ref." style="flex:1;">
                 <button onclick="sendSmallReq()" style="background:#10b981; border:none; padding:10px; border-radius:8px; color:white; font-weight:bold;">OK</button>
             </div>
         </div>
 
-        <div style="color:#94a3b8; margin-top:10px;">Next Result: <span id="time-left" style="color:white; font-weight:bold;">60</span>s</div>
-        <div class="win-box" id="last-win">?</div>
-        <small style="color: #94a3b8;">LATEST WINNING NUMBER</small>
-
-        <div class="num-grid" id="grid-btns">
-            <!-- 0-9 Buttons -->
+        <div class="result-area">
+            <p class="timer-text">Next Result: <span id="time-left" style="color:white; font-weight:bold;">60</span>s</p>
+            <div class="win-box" id="last-win">?</div>
+            <small style="color: #94a3b8; letter-spacing: 1px;">LATEST RESULT</small>
         </div>
+
+        <div class="num-grid" id="grid-container">
+            <!-- Buttons 0-9 will be generated -->
+        </div>
+        <div style="height: 100px;"></div> <!-- Space for sticky footer -->
     </div>
 
     <div class="bet-footer">
-        <input type="number" id="bet-amt" placeholder="Amount ₹" style="width:50%; padding:15px; border-radius:10px; border:none; color:black; font-size:1.1rem; margin-right:10px;">
-        <button class="btn-bet" onclick="placeFastBet()">BET ✅</button>
+        <input type="number" id="bet-amt" placeholder="Amount ₹" style="width:40%; padding:15px; border-radius:10px; border:none; color:black; font-size:1.1rem; margin-right:10px;">
+        <button class="btn-bet" onclick="placeFastBet()">CONFIRM BET</button>
     </div>
 
     <script>
+        // --- FIREBASE CONFIG (Sahi wali) ---
         const firebaseConfig = { apiKey: "AIzaSyD_Da_doRKedyGEVjZemzP9Gq6VIPfokhw", authDomain: "number-samrat.firebaseapp.com", projectId: "number-samrat", storageBucket: "number-samrat.firebasestorage.app", messagingSenderId: "154722781783", appId: "1:154722781783:web:7b6136cec1c34a11b3f112" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
@@ -75,7 +91,7 @@
         let selectedNum = null;
 
         // 1. Grid Generate
-        const grid = document.getElementById('grid-btns');
+        const grid = document.getElementById('grid-container');
         for(let i=0; i<=9; i++) {
             grid.innerHTML += <button class="num-btn" onclick="selectN(${i}, this)">${i}</button>;
         }
@@ -109,20 +125,22 @@
         async function sendSmallReq() {
             const a = document.getElementById("m-amt").value;
             const u = document.getElementById("m-utr").value;
-            if(!a || !u) return alert("Details bharo!");
+            if(!a || !u) return alert("Pehle details bharo!");
             await db.collection("requests_fast").add({ userId, amount: parseInt(a), utr: u, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-            alert("Request Sent!");
+            alert("Request Bheji Gayi! Admin check karega.");
         }
 
         async function placeFastBet() {
             const a = parseInt(document.getElementById("bet-amt").value);
-            if(selectedNum === null || isNaN(a) || a < 10) return alert("Select Number & Amount!");
+            if(selectedNum === null || isNaN(a) || a < 10) return alert("Number aur Amount sahi dalo!");
             const userRef = db.collection("users_fast").doc(userId);
             const uDoc = await userRef.get();
-            if(uDoc.data().wallet < a) return alert("Balance Low!");
+            if(uDoc.data().wallet < a) return alert("Balance kam hai!");
+            
             await userRef.update({ wallet: firebase.firestore.FieldValue.increment(-a) });
             await db.collection("fast_bets").add({ userId, number: selectedNum, amount: a, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-            alert("Bet Placed!");
+            alert("Bet Lag Gayi! Round khatam hone ka wait karein.");
+            document.getElementById("bet-amt").value = "";
         }
 
         function logout() { localStorage.clear(); window.location.href = "index.html"; }
