@@ -3,60 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samrat Fast - 5 Min Game</title>
+    <title>Samrat Fast - Premium Game</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        :root { --gold: #fbbf24; --blue: #3b82f6; --dark: #0f172a; --card: #1e293b; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; }
-        .header { background: #1e293b; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .container { padding: 10px; max-width: 500px; margin: 0 auto; padding-bottom: 120px; }
+        :root { --gold: #fbbf24; --blue: #3b82f6; --dark: #0f172a; --card: #1e293b; --green: #10b981; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
         
-        /* WALLET & TIMER */
-        .wallet-card { background: white; color: black; padding: 15px; border-radius: 15px; text-align: center; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .bal-amt { font-size: 2rem; font-weight: 800; color: #059669; }
+        /* Navbar */
+        .header { background: #1e293b; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        /* Wallet Card */
+        .wallet-card { background: white; color: black; width: 92%; max-width: 400px; margin: 15px auto; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box; }
+        .bal-amt { font-size: 2.2rem; font-weight: 800; color: #059669; margin: 5px 0; }
+        .btn-recharge { display: block; background: var(--gold); color: black; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1rem; margin-top: 10px; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3); }
+
+        /* FAKE LIVE STATS BAR */
+        .live-stats { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--green); margin: 10px auto; width: 92%; padding: 8px; border-radius: 10px; display: flex; justify-content: space-around; font-size: 12px; color: var(--green); font-weight: bold; }
+        .dot { height: 8px; width: 8px; background-color: var(--green); border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 5px; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* Timer & Result */
         .timer-box { font-size: 1.1rem; color: #94a3b8; margin: 15px 0; }
-        .win-circle { width: 75px; height: 75px; background: #000; border: 3px solid var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: bold; color: var(--gold); box-shadow: 0 0 15px var(--gold); }
+        .win-circle { width: 85px; height: 80px; background: #000; border: 3px solid var(--gold); border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: var(--gold); box-shadow: 0 0 15px var(--gold); }
 
-        /* NUMBER GRID */
-        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px; }
-        .num-btn { background: #334155; border: 1px solid #475569; color: white; padding: 12px 0; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
-        .num-btn.active { background: var(--gold); color: black; box-shadow: 0 0 10px var(--gold); }
+        /* Grid */
+        .num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px; max-width: 450px; margin: 0 auto; }
+        .num-btn { background: #334155; border: 1px solid #475569; color: white; padding: 12px 0; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        .num-btn.active { background: var(--gold); color: black; box-shadow: 0 0 12px var(--gold); transform: scale(1.05); }
 
-        /* MY HISTORY SECTION (Visible and Styled) */
-        .history-section { background: var(--card); margin: 20px 10px; padding: 15px; border-radius: 15px; text-align: left; border: 1px solid #334155; }
-        .history-header { color: var(--gold); font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px; font-size: 14px; }
-        .h-card { background: #0f172a; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; border-left: 5px solid #475569; }
-        .status-win { border-left-color: #10b981; color: #10b981; }
-        .status-loss { border-left-color: #ef4444; color: #ef4444; }
+        /* History */
+        .history-section { background: var(--card); margin: 20px 15px; padding: 15px; border-radius: 15px; text-align: left; border: 1px solid #334155; }
+        .h-card { background: #0f172a; padding: 10px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 13px; border-left: 4px solid #475569; }
+        .win-st { border-left-color: var(--green); color: var(--green); }
+        .loss-st { border-left-color: #ef4444; color: #ef4444; }
 
-        /* BET FOOTER */
-        .bet-footer { background: #1e293b; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; display: flex; justify-content: center; z-index: 100; }
+        /* Bet Footer */
+        .bet-footer { background: var(--card); padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; box-sizing: border-box; display: flex; justify-content: center; z-index: 100; }
+        input { width: 50%; padding: 12px; border-radius: 8px; border: none; margin-right: 10px; font-size: 1rem; color: black; font-weight: bold; }
         .btn-bet { background: var(--blue); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="text-align: left;"><b id="uNameDisplay">User</b></div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div style="text-align: left;"><small style="color:var(--gold);">Samrat Fast 5-Min</small><br><b id="uNameDisplay">User</b></div>
+        <button class="logout-btn" onclick="logout()">LOGOUT</button>
+    </div>
+
+    <!-- Live Stats Bar (Fake but effective) -->
+    <div class="live-stats">
+        <span><span class="dot"></span> Online: <span id="fake-players">452</span></span>
+        <span>💰 Live Bets: ₹<span id="fake-bets">1,24,500</span></span>
     </div>
 
     <div class="container">
         <div class="wallet-card">
-            <small>Available Balance</small>
+            <small>Aapka Balance</small>
             <div class="bal-amt">₹<span id="balDisplay">0</span></div>
+            <!-- RECHARGE BUTTON -->
+            <a href="https://zyporapay.com/pay/YOUR_ID" id="recharge-link" class="btn-recharge" target="_blank">➕ RECHARGE WALLET</a>
         </div>
 
         <div class="timer-box">
-            Next Result in: <span id="timer-display" style="color:white; font-weight:bold;">05:00</span>
+            Agla Result: <span id="timer-display" style="color:white; font-weight:bold;">05:00</span>
             <div class="win-circle" id="result-box">?</div>
             <small>LATEST RESULT</small>
         </div>
 
-        <div class="num-grid" id="grid-container">
-            <!-- Line 87 is replaced by simple buttons below -->
+        <div class="num-grid">
             <button class="num-btn" onclick="selectN(0, this)">0</button>
             <button class="num-btn" onclick="selectN(1, this)">1</button>
             <button class="num-btn" onclick="selectN(2, this)">2</button>
@@ -70,86 +86,80 @@
         </div>
 
         <div class="history-section">
-            <div class="history-header">📋 MY RECENT BETS (Win/Loss)</div>
-            <div id="bet-history-list">
-                <p style="color:#475569; font-size:12px;">No bets found yet...</p>
-            </div>
+            <h4 style="margin:0 0 10px 0; color:var(--gold);">📋 MY RECENT BETS</h4>
+            <div id="bet-history-list"></div>
         </div>
     </div>
 
     <div class="bet-footer">
-        <input type="number" id="bet-amt-input" placeholder="Amount ₹" style="width:50%; padding:12px; border-radius:8px; border:none; margin-right:10px; font-size:1rem; color: black;">
-        <button class="btn-bet" onclick="placeFastBet()">CONFIRM BET</button>
+        <input type="number" id="bet-amt-input" placeholder="Amount ₹">
+        <button class="btn-bet" onclick="handlePlaceBet()">PLACE BET</button>
     </div>
 
     <script>
-        // FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyD_Da_doRKedyGEVjZemzP9Gq6VIPfokhw", authDomain: "number-samrat.firebaseapp.com", projectId: "number-samrat", storageBucket: "number-samrat.firebasestorage.app", messagingSenderId: "154722781783", appId: "1:154722781783:web:7b6136cec1c34a11b3f112" };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         const userId = localStorage.getItem("userId_fast");
         if (!userId) { window.location.href = "login.html"; }
 
         let selectedNumber = null;
-
         function selectN(n, btn) {
             selectedNumber = n;
             document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        // 1. User Data (Balance)
+        // 1. LIVE DATA SYNC
         db.collection("users_fast").doc(userId).onSnapshot(doc => {
             if (doc.exists) {
                 document.getElementById("balDisplay").innerText = doc.data().wallet;
-                document.getElementById("uNameDisplay").innerText = "Namaste, " + doc.data().name;
+                document.getElementById("uNameDisplay").innerText = "Welcome, " + doc.data().name;
+                document.getElementById("recharge-link").href = "https://zyporapay.com/pay/YOUR_ID&remark=" + userId;
             }
         });
 
-        // 2. Result Sync
         db.collection("results_fast").orderBy("timestamp", "desc").limit(1).onSnapshot(snap => {
             if (!snap.empty) document.getElementById("result-box").innerText = snap.docs[0].data().number;
         });
 
-        // 3. History Sync (The missing part)
-        db.collection("fast_bets").where("userId", "==", userId).orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
+        db.collection("fast_bets").where("userId", "==", userId).orderBy("timestamp", "desc").limit(5).onSnapshot(snap => {
             let html = "";
             snap.forEach(doc => {
                 const b = doc.data();
-                const statusClass = b.status === "win" ? "status-win" : b.status === "loss" ? "status-loss" : "";
-                html += '<div class="h-card ' + statusClass + '">' +
-                        '<span>No: ' + b.number + ' | ₹' + b.amount + '</span>' +
-                        '<b style="text-transform:uppercase;">' + b.status + '</b>' +
-                        '</div>';
+                const sClass = b.status === "win" ? "win-st" : b.status === "loss" ? "loss-st" : "";
+                html += <div class="h-card ${sClass}"><span>No: ${b.number} | ₹${b.amount}</span><b>${b.status.toUpperCase()}</b></div>;
             });
-            if(html) document.getElementById("bet-history-list").innerHTML = html;
+            document.getElementById("bet-history-list").innerHTML = html || "<p style='color:#475569'>No bets yet.</p>";
         });
 
-        // 4. Timer (5-Min Fix)
+        // 2. 5-MIN TIMER
         setInterval(() => {
             const now = new Date();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const mLeft = 4 - (minutes % 5);
-            const sLeft = 59 - seconds;
-            document.getElementById("timer-display").innerText = (mLeft < 10 ? "0" : "") + mLeft + ":" + (sLeft < 10 ? "0" : "") + sLeft;
+            const minutesLeft = 4 - (now.getMinutes() % 5);
+            const secondsLeft = 59 - now.getSeconds();
+            document.getElementById("timer-display").innerText = (minutesLeft < 10 ? "0" : "") + minutesLeft + ":" + (secondsLeft < 10 ? "0" : "") + secondsLeft;
         }, 1000);
 
-        // 5. Place Bet
-        async function placeFastBet() {
+        // 3. FAKE STATS LOGIC (Har 5 sec mein badlega)
+        setInterval(() => {
+            const p = Math.floor(Math.random() * (650 - 420 + 1) + 420);
+            const b = Math.floor(Math.random() * (280000 - 110000 + 1) + 110000);
+            document.getElementById("fake-players").innerText = p;
+            document.getElementById("fake-bets").innerText = b.toLocaleString();
+        }, 5000);
+
+        // 4. PLACE BET
+        async function handlePlaceBet() {
             const amt = parseInt(document.getElementById("bet-amt-input").value);
             if (selectedNumber === null || isNaN(amt) || amt < 10) return alert("Select Number & Amount!");
-            
             const userRef = db.collection("users_fast").doc(userId);
             const uDoc = await userRef.get();
             if (uDoc.data().wallet < amt) return alert("Balance Low!");
-
             await userRef.update({ wallet: firebase.firestore.FieldValue.increment(-amt) });
-            await db.collection("fast_bets").add({
-                userId: userId, number: selectedNumber, amount: amt, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert("Bet Placed!");
+            await db.collection("fast_bets").add({ userId, number: selectedNumber, amount: amt, status: "pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            alert("Bet Placed! Good Luck.");
             document.getElementById("bet-amt-input").value = "";
         }
 
